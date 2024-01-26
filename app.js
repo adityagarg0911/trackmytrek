@@ -2,13 +2,13 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate'); 
-const Joi = require('joi'); // JOI is a schema description language and data validator for JavaScript
-const {campgroundSchema, reviewSchema} = require('./schemas.js'); // AS OF NOW IT IMPORTS SCHEMA FOR VALIDATION THROUGH JOI
-const catchAsync = require('./utils/catchAsync');
+const session = require('express-session');
+const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override'); // used for different HTTP verbs
-const Campground = require('./models/campground');
-const Review = require('./models/review')
+
+const campgrounds = require('./routes/campgrounds'); // All campground routes are present in this file
+const reviews = require('./routes/reviews'); // All review routes are present in this file
 
 mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp');
 
@@ -26,101 +26,45 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-const validateCampground = (req, res, next) => {
-    const {error} = campgroundSchema.validate(req.body);
-    if(error){
-        res.send(error);
-        const msg = error.details.map(el => el.message).join(', ')
-        throw new ExpressError(msg, 400);
-    }
-    else{
-        next(); // WE HAVE TO CALL NEXT AS IT IS A MIDDLEWARE
+const sessionConfig = {
+    secret: 'thisshouldbeabettersecret!',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }
+app.use(session(sessionConfig));
+app.use(flash());
 
-const validateReview = (req, res, next) => {
-    const {error} = reviewSchema.validate(req.body);
-    if(error){
-        const msg = error.details.map(el => el.message).join(', ')
-        throw new ExpressError(msg, 400);
-    }
-    else{
-        next(); // WE HAVE TO CALL NEXT AS IT IS A MIDDLEWARE
-    }
-}
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+})
+
+app.use('/campgrounds', campgrounds);
+app.use('/campgrounds/:campId/reviews', reviews);
 
 app.get('/', (req, res) => {
     res.render('home');
 });
 
-app.get('/campgrounds', catchAsync(async (req, res) => {
-    const campgrounds = await Campground.find({});
-    res.render('campgrounds/index', {campgrounds});
-}));
-
-app.get('/campgrounds/new', (req, res) => {
-    res.render('campgrounds/new');
-});
-
-app.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) => {
-    // if(!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
-    const campground = new Campground(req.body.campground);
-    await campground.save();
-    res.redirect(`/campgrounds/${campground._id}`);
-}));
-
-app.get('/campgrounds/:id', catchAsync(async (req, res) => {
-    const {id} = req.params;
-    const campground = await Campground.findById(id).populate('reviews');
-    res.render('campgrounds/show', {campground});
-}));
-
-app.get('/campgrounds/:id/edit', catchAsync(async (req, res) => {
-    const {id} = req.params;
-    const campground = await Campground.findById(id);
-    res.render('campgrounds/edit', {campground});
-}));
-
-app.put('/campgrounds/:id', validateCampground, catchAsync(async (req, res) => {
-    const {id} = req.params;
-    const campground = await Campground.findByIdAndUpdate(id, {...req.body.campground});
-    res.redirect(`/campgrounds/${campground._id}`);
-}));
-
-app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
-    const {id} = req.params;
-    // I CANT DELETE WITH ANY OTHER METHOD AS IT IS ASSOCIATED WITH MONGO MIDDLEWARE WHICH WE USED FOR DELETE CASCADING
-    await Campground.findByIdAndDelete(id); 
-    res.redirect('/campgrounds');
-}));
-
-app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async(req, res) => {
-    const campground = await Campground.findById(req.params.id);
-    const review = new Review(req.body.review); // because names are of types review[body] and review[rating]
-    campground.reviews.push(review);
-    await review.save();
-    await campground.save();
-    res.redirect(`/campgrounds/${campground._id}`);
-}));
-
-app.delete('/campgrounds/:campId/reviews/:reviewId', catchAsync(async(req, res) => {
-    const {campId, reviewId} = req.params
-    await Campground.findByIdAndUpdate(campId, {$pull: {reviews: reviewId}}); // IT WILL REMOVE REVIEW WITH reviewId from reviews ARRAY
-    await Review.findByIdAndDelete(reviewId);
-    res.redirect(`/campgrounds/${campId}`);
-}));
 
 app.all('*', (req, res, next) => {
     // only requests which do not match any of the specifies routes will come here
     next(new ExpressError('Page Not Found', 404));
-})
+});
 
 app.use((err, req, res, next) => {
     const {statusCode = 500} = err;
     if(!err.message) err.message = 'Oh No, Something Went Wrong';
     res.status(statusCode).render('error', {err});
-})
+});
 
 app.listen(3000, () => {
     console.log('Serving on Port 3000');

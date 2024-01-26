@@ -1,5 +1,5 @@
 // IT CONTAINS SCHEMA FOR VALIDATION OF DATA FOR POST AND PUT REQUEST WITH THE HELP OF JOI
-const Joi = require('joi');
+const Joi = require('joi'); // JOI is a schema description language and data validator for JavaScript
 
 module.exports.campgroundSchema = Joi.object({
     campground: Joi.object({

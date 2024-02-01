@@ -1,3 +1,10 @@
+if(process.env.NODE_ENV != "production"){ 
+    // this means if we are not in production rn, do this 
+    // there is a different way to deal with env variables in production
+    require('dotenv').config()
+}
+
+
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');

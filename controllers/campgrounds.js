@@ -1,5 +1,7 @@
 const Campground = require('../models/campground'); 
 const {cloudinary} = require("../cloudinary");
+const opencage = require('opencage-api-client');
+const geojson = require('geojson');
 
 module.exports.index = async (req, res) => {
     const campgrounds = await Campground.find({});
@@ -11,8 +13,12 @@ module.exports.renderNewForm = (req, res) => {
 };
 
 module.exports.createCampground = async (req, res, next) => {
+    const coord = await opencage.geocode({ q: req.body.campground.location });
+    const geoData = geojson.parse(coord.results, { Point: ['geometry.lat', 'geometry.lng'] });
+    // res.send(geoData.features[0].geometry);
     // if(!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
     const campground = new Campground(req.body.campground);
+    campground.geometry = geoData.features[0].geometry;
     campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     campground.author = req.user._id;
     console.log(campground);

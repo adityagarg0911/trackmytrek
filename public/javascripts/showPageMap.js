@@ -1,5 +1,5 @@
 // we have to swap geometry coordinates
-var map = L.map('map').setView([campground.geometry.coordinates[1], campground.geometry.coordinates[0]], 12); // coordinates, zoomLevel
+var map = L.map('map').setView([trek.geometry.coordinates[1], trek.geometry.coordinates[0]], 12); // coordinates, zoomLevel
 
 
 const mainLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png', {
@@ -9,10 +9,10 @@ const mainLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voy
 mainLayer.addTo(this.map);
 
 
-var marker = L.marker([campground.geometry.coordinates[1], campground.geometry.coordinates[0]])
+var marker = L.marker([trek.geometry.coordinates[1], trek.geometry.coordinates[0]])
                 .addTo(map);
 
-marker.bindPopup(`<h6>${campground.title}</h6> <p>${campground.location}</p>`);
+marker.bindPopup(`<h6>${trek.title}</h6> <p>${trek.location}</p>`);
 
 marker.on('mouseover', function () {
     this.openPopup();

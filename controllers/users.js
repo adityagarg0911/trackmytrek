@@ -13,7 +13,7 @@ module.exports.register = async (req, res, next) => {
         req.login(registeredUser, err => {
             if(err) return next(err);
             req.flash('success', 'Welcome to Yelp Camp!');
-            res.redirect('/campgrounds');
+            res.redirect('/treks');
         })
     }
     catch(e){
@@ -28,7 +28,7 @@ module.exports.renderLogin = (req, res) => {
 
 module.exports.login = (req, res) => {
     req.flash('success', 'Welcome back!');
-    const redirectUrl = res.locals.returnTo || '/campgrounds';
+    const redirectUrl = res.locals.returnTo || '/treks';
     res.redirect(redirectUrl);
 };
 
@@ -38,6 +38,6 @@ module.exports.logout = (req, res) => {
             return next(err);
         }
         req.flash('success', "Good Bye!")
-        res.redirect('/campgrounds');
+        res.redirect('/treks');
     });
 };

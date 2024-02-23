@@ -1,4 +1,4 @@
-var map = L.map('map').setView([40, -103], 3)
+var map = L.map('map').setView([23.2599, 77.4126], 4.5);
 
 const mainLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png', {
   maxZoom: 19,
@@ -8,27 +8,15 @@ mainLayer.addTo(this.map);
 
 const markers = L.markerClusterGroup();
 
-// mainLayer.on('load', function () {
-//     console.log("MAP LOADED");
-// });
-
-// mainLayer.on('click', 'unclustered-point', function () {
-//     console.log("UC POINT CLICKED");
-// });
-  
-// map.on('click', 'unclustered-point', function () {
-//     console.log("UC POINT CLICKED");
-// });
-
-for (campground of campgrounds) {
+for (trek of treks) {
     const marker = L.marker([
-        campground.geometry.coordinates[1],
-        campground.geometry.coordinates[0]
+        trek.geometry.coordinates[1],
+        trek.geometry.coordinates[0]
     ]).bindPopup(`
-                <a href="/campgrounds/${campground._id}"}>
-                    <h6>${campground.title}</h6>
+                <a href="/treks/${trek._id}"}>
+                    <h6>${trek.title}</h6>
                 </a>
-                <p>${campground.location}</p>
+                <p>${trek.location}</p>
         `)
     markers.addLayer(marker)
 }

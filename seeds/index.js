@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const cities = require('./cities');
 const {places, descriptors} = require('./seedHelpers');
-const Campground = require('../models/campground');
+const Trek = require('../models/trek');
 
 mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp');
 
@@ -16,21 +16,21 @@ const sample = (array) => {
 }
 
 const seedDB = async () => {
-    await Campground.deleteMany({});
-    for(let i=0; i<50; i++){
-        const random1000 = Math.floor(Math.random() * 1000);
-        const price = Math.floor(Math.random() * 20) + 10;
-        const camp = new Campground({
+    await Trek.deleteMany({});
+    for(let i=0; i<70; i++){
+        const random360 = Math.floor(Math.random() * 360);
+        const price = Math.floor(Math.random() * 1000) + 2000;
+        const camp = new Trek({
             author: '65b6aa82c9fdb82a79d82184',
-            location: `${cities[random1000].city}, ${cities[random1000].state}`,
-            title: `${sample(descriptors)} ${sample(places)}`,
+            location: `${cities[random360].state}`,
+            title: `${cities[random360].city}`,
             description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tempore ab dolorem inventore, perferendis odio, fuga obcaecati labore minima, sequi distinctio nemo eligendi sunt.",
             price: price,
             geometry: { 
                 type: 'Point', 
                 coordinates: [
-                    cities[random1000].longitude, 
-                    cities[random1000].latitude
+                    cities[random360].longitude, 
+                    cities[random360].latitude
                 ] 
             },
             images: [

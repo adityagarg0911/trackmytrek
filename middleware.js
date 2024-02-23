@@ -1,6 +1,6 @@
-const {campgroundSchema, reviewSchema} = require('./schemas.js'); // AS OF NOW IT IMPORTS SCHEMA FOR VALIDATION THROUGH JOI
+const {trekSchema, reviewSchema} = require('./schemas.js'); // AS OF NOW IT IMPORTS SCHEMA FOR VALIDATION THROUGH JOI
 const ExpressError = require('./utils/ExpressError');
-const Campground = require('./models/campground');
+const Trek = require('./models/trek');
 const Review = require('./models/review');
 
 module.exports.isLoggedIn = (req, res, next) => {
@@ -21,8 +21,8 @@ module.exports.storeReturnTo = (req, res, next) => {
     next();
 }
 
-module.exports.validateCampground = (req, res, next) => {
-    const {error} = campgroundSchema.validate(req.body);
+module.exports.validateTrek = (req, res, next) => {
+    const {error} = trekSchema.validate(req.body);
     if(error){
         const msg = error.details.map(el => el.message).join(', ')
         throw new ExpressError(msg, 400);
@@ -34,10 +34,10 @@ module.exports.validateCampground = (req, res, next) => {
 
 module.exports.isAuthor = async (req, res, next) => {
     const {id} = req.params;
-    const campground = await Campground.findById(id);
-    if(!campground.author.equals(req.user._id)){
+    const trek = await Trek.findById(id);
+    if(!trek.author.equals(req.user._id)){
         req.flash('error', 'You do not have permission to do that');
-        return res.redirect(`/campgrounds/${id}`);
+        return res.redirect(`/treks/${id}`);
     }
     next();
 }
@@ -58,7 +58,7 @@ module.exports.isReviewAuthor = async (req, res, next) => {
     const review = await Review.findById(reviewId);
     if(!review.author.equals(req.user._id)){
         req.flash('error', 'You do not have permission to do that');
-        return res.redirect(`/campgrounds/${id}`);
+        return res.redirect(`/treks/${id}`);
     }
     next();
 }

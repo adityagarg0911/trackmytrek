@@ -10,7 +10,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
     cloudinary,
     params: {
-        folder: 'Yelpcamp2',
+        folder: 'Trackmytrek2',
         allowedFormats: ['jpeg', 'png', 'jpg']
     }
 });

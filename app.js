@@ -24,7 +24,7 @@ const userRoutes = require('./routes/users'); // All user routes are present in 
 const trekRoutes = require('./routes/treks'); // All trek routes are present in this file
 const reviewRoutes = require('./routes/reviews'); // All review routes are present in this file
 
-mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp');
+mongoose.connect('mongodb://127.0.0.1:27017/trackmytrek');
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "Connection error:"));

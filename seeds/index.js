@@ -3,7 +3,7 @@ const cities = require('./cities');
 const {places, descriptors} = require('./seedHelpers');
 const Trek = require('../models/trek');
 
-mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp');
+mongoose.connect('mongodb://127.0.0.1:27017/trackmytrek');
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "Connection error:"));
@@ -21,7 +21,7 @@ const seedDB = async () => {
         const random360 = Math.floor(Math.random() * 360);
         const price = Math.floor(Math.random() * 1000) + 2000;
         const camp = new Trek({
-            author: '65b6aa82c9fdb82a79d82184',
+            author: '65d86724857106aa6bc851c4',
             location: `${cities[random360].state}`,
             title: `${cities[random360].city}`,
             description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tempore ab dolorem inventore, perferendis odio, fuga obcaecati labore minima, sequi distinctio nemo eligendi sunt.",
@@ -35,12 +35,12 @@ const seedDB = async () => {
             },
             images: [
                 {
-                  url: 'https://res.cloudinary.com/dsrylwhzq/image/upload/v1706728680/Yelpcamp2/oucdyp1mvwyxy5bxmn6y.jpg',
-                  filename: 'Yelpcamp2/gbuu66hscdlzjtewlgby',
+                  url: 'https://res.cloudinary.com/daprx8wd9/image/upload/v1708680566/Trackmytrek2/wtegdodjvexd1qofpdbd.jpg',
+                  filename: 'Trackmytrek2/wtegdodjvexd1qofpdbd',
                 },
                 {
-                  url: 'https://res.cloudinary.com/dsrylwhzq/image/upload/v1706697574/Yelpcamp2/k991h1kn9ghaagx7bzs0.jpg',
-                  filename: 'Yelpcamp2/k991h1kn9ghaagx7bzs0',
+                  url: 'https://res.cloudinary.com/daprx8wd9/image/upload/v1708680549/Trackmytrek2/qcydspv6o9f9udpbntar.jpg',
+                  filename: 'Trackmytrek2/qcydspv6o9f9udpbntar'
                 }
             ]
         })

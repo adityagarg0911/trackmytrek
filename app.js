@@ -26,8 +26,7 @@ const reviewRoutes = require('./routes/reviews'); // All review routes are prese
 
 const MongoStore = require('connect-mongo');
 
-// const dbUrl = process.env.DB_URL;
-const dbUrl = 'mongodb://127.0.0.1:27017/trackmytrek';
+const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/trackmytrek';
 mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
@@ -47,11 +46,12 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize());
 
+const secret = process.env.secret || 'thisshouldbeabettersecret!';
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     touchAfter: 24 * 60 * 60,
     crypto: {
-        secret: 'thisshouldbeabettersecret!'
+        secret
     }
 });
 
@@ -59,10 +59,11 @@ store.on("error", function(e) {
     console.log("SESSION STORE ERROR", e);
 });
 
+
 const sessionConfig = {
     store,
     name: 'sessionconnection',
-    secret: 'thisshouldbeabettersecret!',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -112,6 +113,8 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error', {err});
 });
 
-app.listen(3000, () => {
-    console.log('Serving on Port 3000');
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+    console.log(`Serving on Port ${port}`);
 });

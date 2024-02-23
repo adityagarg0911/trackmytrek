@@ -21,9 +21,9 @@ const seedDB = async () => {
         const random360 = Math.floor(Math.random() * 360);
         const price = Math.floor(Math.random() * 1000) + 2000;
         const camp = new Trek({
-            author: '65d883d06e92ce52a43bea38',
-            location: ${cities[random360].state},
-            title: ${cities[random360].city},
+            author: '65d86724857106aa6bc851c4',
+            location: `${cities[random360].state}`,
+            title: `${cities[random360].city}`,
             description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tempore ab dolorem inventore, perferendis odio, fuga obcaecati labore minima, sequi distinctio nemo eligendi sunt.",
             price: price,
             geometry: { 

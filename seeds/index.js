@@ -21,9 +21,9 @@ const seedDB = async () => {
         const random360 = Math.floor(Math.random() * 360);
         const price = Math.floor(Math.random() * 1000) + 2000;
         const camp = new Trek({
-            author: '65d86724857106aa6bc851c4',
-            location: `${cities[random360].state}`,
-            title: `${cities[random360].city}`,
+            author: '65d883d06e92ce52a43bea38',
+            location: ${cities[random360].state},
+            title: ${cities[random360].city},
             description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tempore ab dolorem inventore, perferendis odio, fuga obcaecati labore minima, sequi distinctio nemo eligendi sunt.",
             price: price,
             geometry: { 
@@ -35,12 +35,12 @@ const seedDB = async () => {
             },
             images: [
                 {
-                  url: 'https://res.cloudinary.com/daprx8wd9/image/upload/v1708680566/Trackmytrek2/wtegdodjvexd1qofpdbd.jpg',
-                  filename: 'Trackmytrek2/wtegdodjvexd1qofpdbd',
+                  url: 'https://res.cloudinary.com/dhpoq6jst/image/upload/v1708688123/Trackmytrek2/mthxmo9idljfsznpwh46.jpg',
+                  filename: 'Trackmytrek2/mthxmo9idljfsznpwh46',
                 },
                 {
-                  url: 'https://res.cloudinary.com/daprx8wd9/image/upload/v1708680549/Trackmytrek2/qcydspv6o9f9udpbntar.jpg',
-                  filename: 'Trackmytrek2/qcydspv6o9f9udpbntar'
+                  url: 'https://res.cloudinary.com/dhpoq6jst/image/upload/v1708687926/Trackmytrek2/ph39rwrcsksrqnn4moqj.jpg',
+                  filename: 'Trackmytrek2/ph39rwrcsksrqnn4moqj'
                 }
             ]
         })
